@@ -2,11 +2,9 @@ from nodes.node import Node
 from core.status import Status
 
 
-
 class Sequence(Node):
 
-
-    def __init__(self,children):
+    def __init__(self, children):
 
         self.children = children
 
@@ -17,45 +15,53 @@ class Sequence(Node):
     def tick(self,event):
 
 
-        while self.current_index < len(self.children):
+        if self.current_index >= len(self.children):
 
+            self.reset()
 
-            child = self.children[self.current_index]
-
-
-            result = child.tick(event)
-
-
-
-            if result == Status.SUCCESS:
-
-
-                self.current_index += 1
-
-                continue
+            return Status.SUCCESS
 
 
 
-            elif result == Status.RUNNING:
+        child = self.children[self.current_index]
 
 
-                return Status.RUNNING
+        result = child.tick(event)
 
 
 
-            else:
+        if result == Status.SUCCESS:
 
+
+            self.current_index += 1
+
+
+
+            if self.current_index == len(self.children):
 
                 self.reset()
 
-                return Status.FAILURE
+                return Status.SUCCESS
 
 
 
-        self.reset()
+            return Status.RUNNING
 
-        return Status.SUCCESS
 
+
+        elif result == Status.RUNNING:
+
+
+            return Status.RUNNING
+
+
+
+        else:
+
+
+            self.reset()
+
+            return Status.FAILURE
 
 
 
