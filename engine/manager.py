@@ -82,3 +82,8 @@ class InstanceManager:
 
 
         return detected_users
+
+
+    def active_count(self):
+
+        return len(self.instances)
