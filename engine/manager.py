@@ -16,7 +16,6 @@ class InstanceManager:
 
     def create_instance(self, event):
 
-
         instance = TreeInstance(
 
             self.pattern_factory(),
@@ -27,9 +26,7 @@ class InstanceManager:
 
         )
 
-
         self.counter += 1
-
 
         self.instances.append(instance)
 
@@ -37,13 +34,11 @@ class InstanceManager:
 
     def process_event(self, event):
 
-
         detected_users = []
 
-
+        event_user = event.attributes["user"]
 
         # 创建新的匹配实例
-
         start_events = getattr(
 
             self.pattern_factory,
@@ -54,32 +49,24 @@ class InstanceManager:
 
         )
 
-
         if event.event_type in start_events:
-
 
             self.create_instance(event)
 
-
-
-        # 推进已有实例
-
+        # 仅推进相同用户的实例
         for instance in list(self.instances):
 
+            if instance.context_key != event_user:
+
+                continue
 
             result = instance.process(event)
 
-
-
             if result:
-
 
                 detected_users.append(result)
 
-
                 self.instances.remove(instance)
-
-
 
         return detected_users
 
