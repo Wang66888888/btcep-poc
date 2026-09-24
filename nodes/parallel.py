@@ -1,9 +1,9 @@
 from nodes.node import Node
 from core.status import Status
+from config import DEBUG
 
 
 class Parallel(Node):
-
 
     def __init__(self, children):
 
@@ -14,31 +14,29 @@ class Parallel(Node):
         ]
 
 
+    def tick(self, event):
 
-    def tick(self,event):
-
-
-        print(
-            "[Parallel] before:",
-            self.completed
-        )
+        if DEBUG:
+            print(
+                "[Parallel] before:",
+                self.completed
+            )
 
 
         for index, child in enumerate(self.children):
-
 
             if self.completed[index]:
 
                 continue
 
 
-
             result = child.tick(event)
 
 
-            print(
-                f"[Parallel] child {index} result={result}"
-            )
+            if DEBUG:
+                print(
+                    f"[Parallel] child {index} result={result}"
+                )
 
 
             if result == Status.SUCCESS:
@@ -47,17 +45,19 @@ class Parallel(Node):
 
 
 
-        print(
-            "[Parallel] after:",
-            self.completed
-        )
+        if DEBUG:
 
+            print(
+                "[Parallel] after:",
+                self.completed
+            )
 
 
         if all(self.completed):
 
-            return Status.SUCCESS
+            self.reset()
 
+            return Status.SUCCESS
 
 
         return Status.RUNNING
@@ -65,7 +65,6 @@ class Parallel(Node):
 
 
     def reset(self):
-
 
         self.completed = [
             False for _ in self.children

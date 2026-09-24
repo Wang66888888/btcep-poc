@@ -1,4 +1,5 @@
 from core.status import Status
+from config import DEBUG
 
 
 class TreeInstance:
@@ -27,9 +28,11 @@ class TreeInstance:
         result = self.tree.tick(event)
 
 
-        print(
-            f"[TreeInstance] event={event.event_type}, result={result}"
-        )
+        if DEBUG:
+
+            print(
+                f"[TreeInstance] event={event.event_type}, result={result}"
+            )
 
 
         if result == Status.SUCCESS:
