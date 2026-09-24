@@ -1,7 +1,6 @@
 from engine.instance import TreeInstance
 
 
-
 class InstanceManager:
 
 
@@ -15,21 +14,17 @@ class InstanceManager:
 
 
 
-    def create_instance(self,event):
-
-
-        print(
-            f"[Manager] Create instance for {event.attributes['user']}"
-        )
-
-
-        tree = self.pattern_factory()
+    def create_instance(self, event):
 
 
         instance = TreeInstance(
-            tree,
+
+            self.pattern_factory(),
+
             self.counter,
+
             event.attributes["user"]
+
         )
 
 
@@ -40,47 +35,47 @@ class InstanceManager:
 
 
 
-    def process_event(self,event):
+    def process_event(self, event):
 
 
         detected_users = []
 
 
-        key = event.attributes["user"]
+
+        # 创建新的匹配实例
+
+        start_events = getattr(
+
+            self.pattern_factory,
+
+            "start_events",
+
+            []
+
+        )
 
 
+        if event.event_type in start_events:
 
-        if event.event_type in self.pattern_factory.start_events:
 
             self.create_instance(event)
 
 
 
-        print(
-            f"[Manager] Active instances: {len(self.instances)}"
-        )
+        # 推进已有实例
 
-
-        for instance in self.instances[:]:
-
-
-            if instance.context_key != key:
-
-                continue
-
+        for instance in list(self.instances):
 
 
             result = instance.process(event)
 
 
-            print(
-                f"[Manager] Instance {instance.instance_id} result={result}"
-            )
 
+            if result:
 
-            if result is not None:
 
                 detected_users.append(result)
+
 
                 self.instances.remove(instance)
 
