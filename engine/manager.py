@@ -36,6 +36,12 @@ class InstanceManager:
         # Only advance instances belonging to the same user.
         for instance in list(self.instances):
 
+            # Window lifetime follows global event time,
+            # independently of context routing.
+            if instance.is_expired(event.timestamp):
+                self.instances.remove(instance)
+                continue
+
             if instance.context_key != event_user:
                 continue
 

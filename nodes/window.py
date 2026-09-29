@@ -42,6 +42,15 @@ class Window(Node):
             context
         )
 
+    def is_expired(self, current_time):
+        if self.start_time is None:
+            return False
+
+        return (
+            current_time - self.start_time
+            > self.window_size
+        )
+
     def reset(self):
         self.start_time = None
         self.expired = False

@@ -41,6 +41,18 @@ class TreeInstance:
 
         return None
 
+    def is_expired(self, current_time):
+        checker = getattr(
+            self.tree,
+            "is_expired",
+            None
+        )
+
+        if checker is None:
+            return False
+
+        return checker(current_time)
+
     def reset(self):
         self.completed = False
         self.tree.reset()
