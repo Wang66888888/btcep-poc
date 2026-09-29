@@ -2,21 +2,27 @@ from nodes.node import Node
 from core.status import Status
 
 
-
 class Window(Node):
 
-
-    def __init__(self,child,timeout):
+    def __init__(
+        self,
+        child,
+        window_size
+    ):
 
         self.child = child
 
-        self.timeout = timeout
+        self.window_size = window_size
 
         self.start_time = None
 
 
 
-    def tick(self,event):
+    def tick(
+        self,
+        event,
+        context=None
+    ):
 
 
         if self.start_time is None:
@@ -25,8 +31,11 @@ class Window(Node):
 
 
 
-        if event.timestamp - self.start_time > self.timeout:
-
+        if (
+            event.timestamp - self.start_time
+            >
+            self.window_size
+        ):
 
             self.reset()
 
@@ -34,12 +43,13 @@ class Window(Node):
 
 
 
-        result = self.child.tick(event)
-
+        result = self.child.tick(
+            event,
+            context
+        )
 
 
         return result
-
 
 
 

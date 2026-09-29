@@ -12,7 +12,7 @@ class Sequence(Node):
 
 
 
-    def tick(self,event):
+    def tick(self, event, context=None):
 
 
         if self.current_index >= len(self.children):
@@ -23,18 +23,20 @@ class Sequence(Node):
 
 
 
-        child = self.children[self.current_index]
+        child = self.children[
+            self.current_index
+        ]
 
 
-        result = child.tick(event)
-
+        result = child.tick(
+            event,
+            context
+        )
 
 
         if result == Status.SUCCESS:
 
-
             self.current_index += 1
-
 
 
             if self.current_index == len(self.children):
@@ -44,20 +46,11 @@ class Sequence(Node):
                 return Status.SUCCESS
 
 
-
             return Status.RUNNING
 
 
 
-        elif result == Status.RUNNING:
-
-
-            return Status.RUNNING
-
-
-
-        else:
-
+        elif result == Status.FAILURE:
 
             self.reset()
 
@@ -65,6 +58,15 @@ class Sequence(Node):
 
 
 
+        return Status.RUNNING
+
+
+
     def reset(self):
 
         self.current_index = 0
+
+
+        for child in self.children:
+
+            child.reset()

@@ -14,29 +14,21 @@ class Parallel(Node):
         ]
 
 
-    def tick(self, event):
-
-        if DEBUG:
-            print(
-                "[Parallel] before:",
-                self.completed
-            )
+    def tick(self, event, context=None):
 
 
         for index, child in enumerate(self.children):
+
 
             if self.completed[index]:
 
                 continue
 
 
-            result = child.tick(event)
-
-
-            if DEBUG:
-                print(
-                    f"[Parallel] child {index} result={result}"
-                )
+            result = child.tick(
+                event,
+                context
+            )
 
 
             if result == Status.SUCCESS:
@@ -45,19 +37,12 @@ class Parallel(Node):
 
 
 
-        if DEBUG:
-
-            print(
-                "[Parallel] after:",
-                self.completed
-            )
-
-
         if all(self.completed):
 
             self.reset()
 
             return Status.SUCCESS
+
 
 
         return Status.RUNNING

@@ -25,7 +25,7 @@ class TreeInstance:
     def process(self,event):
 
 
-        result = self.tree.tick(event)
+        result = self.tree.tick(event, self.context_key)
 
 
         if DEBUG:

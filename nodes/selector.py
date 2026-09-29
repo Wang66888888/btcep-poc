@@ -4,20 +4,26 @@ from core.status import Status
 
 class Selector(Node):
 
-
     def __init__(self, children):
 
         self.children = children
 
 
 
-    def tick(self, event):
+    def tick(
+        self,
+        event,
+        context=None
+    ):
 
 
         for child in self.children:
 
 
-            result = child.tick(event)
+            result = child.tick(
+                event,
+                context
+            )
 
 
             if result == Status.SUCCESS:
