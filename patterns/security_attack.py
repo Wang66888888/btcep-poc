@@ -74,8 +74,7 @@ selector_attack_pattern.start_events = [
 
 
 parallel_attack_pattern.start_events = [
-    "LOGIN_FAIL",
-    "FILE_ACCESS"
+    "LOGIN_FAIL"
 ]
 
 
